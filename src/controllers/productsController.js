@@ -72,9 +72,15 @@ const controller = {
 		const { name, price, discount, category, description} = req.body
 		products.forEach(product => {
 			if(product.id == id) {
-				
+				product.name = req.body.name,
+				product.price = req.body.price,
+				product.discount = req.body.discount,
+				product.category = req.body.category,
+				product.description = req.body.description,
+				product.image =  req.file ? req.file.filename : 'default-image.png'	
 			}
 		})
+		writeJson(products);
 		res.redirect('/products')
 		// Do the magic
 	},
@@ -82,6 +88,10 @@ const controller = {
 	// Delete - Delete one product from DB
 	destroy : (req, res) => {
 		// Do the magic
+		let productId = Number(req.params.id);
+		let newProductsArray = products.filter(product => product.id !== productId);
+		writeJson(newProductsArray);
+		res.redirect('/products/');
 	}
 };
 
