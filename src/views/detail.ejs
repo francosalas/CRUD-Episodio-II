@@ -19,12 +19,12 @@
 				<div class="col-12 col-lg-8">
 					<img src="/images/products/<%= product.name %>" alt="product image" class="product-detail-img">
 					<p class="product-detail-description">
-						PRODUCT DESCRIPTION
+						<%= product.description %>
 					</p>
 				</div>
 				<div class="col-12 col-lg-4">
 					<article class="product-detail-info">
-						<h2 class="product-detail-title"><%= product.name %></h2>
+						<h2 class="product-detail-title" <%= product.name %></h2>
 						
 							<p class="product-detail-price small">
 								<span><%= product.price %></span>
