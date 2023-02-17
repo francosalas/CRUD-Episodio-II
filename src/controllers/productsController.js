@@ -22,12 +22,13 @@ const controller = {
 	// Detail - Detail from one product
 	detail: (req, res) => {
 		// Do the magic
-		const { id } = req.params
-		const product = product.find(product => product.id == Number(id))
-		res.send(product)
-		res.render('detail', 
-		product)
+		let productId = req.params.id;
+		let product = products.find(product => product.id == productId);
 
+		res.render("detail", {
+			product,
+			toThousand
+		})
 	},
 
 	// Create - Form to create
@@ -39,50 +40,50 @@ const controller = {
 	// Create -  Method to store
 	store: (req, res) => {
 		// Do the magic
-		const {name, price,discount, category, description} = req.body
-		const id = Math.max(...products.map(el => el.id))
-		const newProduct = {
-			id : id + 1,
-			name,
-			price,
-			discount,
-			category,
-			description,
-			image : 'default-image.png'
+		let lastId = products[products.length -1].id;
+		
+		let newProduct = {
+			id: lastId + 1,
+			name: req.body.name,
+			price: req.body.price,
+			discount: req.body.discount,
+			category: req.body.category,
+			description: req.body.description,
+			image: req.file ? req.file.filename : 'default-image.png'
 		}
 
 		products.push(newProduct)
 		writeJson(products)
-		res.send(products)
 		res.redirect('/products')
 	},
 
 	// Update - Form to edit
 	edit: (req, res) => {
 		// Do the magic
-		res.render('product-edit-form')
+		let productId = Number(req.params.id);
+		let productToEdit = products.find(product  => product.id === productId);
+
+		res.render('product-edit-form', {
+			productToEdit,
+		})
 	},
 	// Update - Method to update
 	update: (req, res) => {
-		const {id} = req.params
-		const product = products.find(produc => product.id === +id)
-		if(!product){
-			return res.send('no existe el producto')
-		}
-		const { name, price, discount, category, description} = req.body
+		// Do the magic
+		let productId = Number(req.params.id);
+
 		products.forEach(product => {
-			if(product.id == id) {
+			if(product.id === productId){
 				product.name = req.body.name,
 				product.price = req.body.price,
 				product.discount = req.body.discount,
 				product.category = req.body.category,
 				product.description = req.body.description,
-				product.image =  req.file ? req.file.filename : 'default-image.png'	
+				product.image =  req.file ? req.file.filename : 'default-image.png'
 			}
 		})
 		writeJson(products);
 		res.redirect('/products')
-		// Do the magic
 	},
 
 	// Delete - Delete one product from DB
